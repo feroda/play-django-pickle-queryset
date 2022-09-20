@@ -1,3 +1,5 @@
+import sys
+
 from django.db import models
 
 
@@ -23,7 +25,7 @@ class BasicSecretAgent(AbstractBasicSecretAgent):
         db_table = "basic_secret"
 
 
-def get_dynamic_agent_model(version=None):
+def get_dynamic_agent_model_v1(version=None):
     """
     Compute dynamic model whose queryset to be pickled
     """
@@ -32,7 +34,7 @@ def get_dynamic_agent_model(version=None):
         return BasicSecretAgent
 
     cls = AbstractBasicSecretAgent
-    name = 'basic_secet_' + str(version)
+    name = 'basic_secret_' + str(version)
 
     class Meta:
         db_table = "basic_secret"
@@ -46,12 +48,17 @@ def get_dynamic_agent_model(version=None):
         'Meta': Meta,
         '__str__': lambda self: 'Board var configs as of %s' % version,
         '_version_': version,
-        # '__reduce__': cls.__reduce__,
-        # '__setstate__': cls.__setstate__,
-        # '__getstate__': cls.__getstate__,
-        # '__dict__': cls.__dict__
     }
 
     model = type(name, (AbstractBasicSecretAgent, ), attrs)
     return model
     
+
+def get_dynamic_agent_model_v2(version=None):
+    """
+    Fixes the pickling of the Queryset!!!
+    """
+
+    m = get_dynamic_agent_model_v1(version=version)
+    setattr(sys.modules[m.__module__], m.__name__, m)
+    return m
