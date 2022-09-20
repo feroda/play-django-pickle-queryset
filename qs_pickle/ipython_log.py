@@ -16,3 +16,7 @@ except Exception as e:
 m = get_dynamic_agent_model_v2(42)
 print(f"--- ORA PROVO CON IL NUOVO MODELLO FIXATO {m.__name__}")
 cache.set("cielcio42", m.objects.all())
+
+print(f"--- ORA RECUPERO IL MODELLO UN'ULTIMA VOLTA PER VERIFICARE CHE NON AVVENGA IL RunTimeWarning {m.__name__}")
+m = get_dynamic_agent_model_v2(42)
+cache.set("cielcio42", m.objects.all())

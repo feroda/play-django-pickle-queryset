@@ -36,6 +36,12 @@ def get_dynamic_agent_model_v1(version=None):
     cls = AbstractBasicSecretAgent
     name = 'basic_secret_' + str(version)
 
+    model_already_registered = getattr(sys.modules[cls.__module__], name, None)
+    print(f"{model_already_registered=} {dir(sys.modules[cls.__module__])=}")
+    if model_already_registered:
+        return model_already_registered
+        
+
     class Meta:
         db_table = "basic_secret"
         app_label = cls._meta.app_label
